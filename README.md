@@ -26,11 +26,16 @@ that were introduced during development. In particular:
     - PORT - Application HTTP Exposed Port
     - DB_CONNECTION_STRING - Database connection string `mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]`
 
+## Run Application
+- Install dependencies `npm install`
+- Run `npm start`
+- Connect to `http://<hostname|IP>:<ENV.PORT>`
+
 ## Problem Requirements
 
 1. Automate the creation of the infrastructure and the setup of the application.
-2. Avoid crashes. The infrastructure must be stable, reliable and resilient
-3. Backup the logs and database and rotation of 7 days
+2. Recover from crashes. Implement a method autorestart the service on crash
+3. Backup the logs and database with rotation of 7 days
 4. Notify any CPU peak
 5. Implements a CI/CD pipeline for the code
 6. Scale when the number of request are greater than 10 req /sec
