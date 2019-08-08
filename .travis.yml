@@ -2,10 +2,10 @@ services:
   - docker
 
 before_install:
-  - docker build -t iosdal/phoenix-kata .
+  - docker build -t ivandal77/demo .
 
 script:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker push ivandal77/demo:v1
+  - docker push ivandal77/demo
 
   #- docker run iosdal/phoenix-kata
