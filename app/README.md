@@ -1,9 +1,5 @@
-## Docker build
- docker build .
-
-##Docker run
-docker run -p 27017:27017 mongo
-docker run -p 8087:8087 -e "PORT=8087" -e "DB_CONNECTION_STRING=mongodb://192.168.126.186" 547e24e698ff
+# Phoenix Application Problem
+This problem is about to create a production ready infrastructure for the Phoenix Application.
 
 ## Problem
 
