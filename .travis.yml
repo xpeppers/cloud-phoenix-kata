@@ -1,11 +1,16 @@
 services:
   - docker
 
-before_install:
+language: generic
+
+before_script:
+  - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
   - docker build -t ivandal77/demo .
 
 script:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker push ivandal77/demo
+  - kubectl
+
 
   #- docker run iosdal/phoenix-kata
