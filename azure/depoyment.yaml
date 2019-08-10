@@ -1,0 +1,71 @@
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: demo
+    name: demo
+    namespace: demo
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        run: demo
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          run: demo
+      spec:
+        containers:
+        - env:
+          - name: PORT
+            value: "8080"
+          - name: DB_CONNECTION_STRING
+            #value: mongodb://demo:demoxpeppers@cluster0-shard-00-00-1on3s.azure.mongodb.net:27017,cluster0-shard-00-01-1on3s.azure.mongodb.net:27017,cluster0-shard-00-02-1on3s.azure.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority
+            value: mongodb://mongo-mongodb.default.svc.cluster.local
+          image: ivandal77/demo
+          imagePullPolicy: Always
+          name: demo
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2019-08-09T09:31:55Z"
+      lastUpdateTime: "2019-08-09T09:31:55Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2019-08-09T09:31:50Z"
+      lastUpdateTime: "2019-08-09T09:31:55Z"
+      message: ReplicaSet "demo-6c774545d7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
