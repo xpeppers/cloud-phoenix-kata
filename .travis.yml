@@ -17,6 +17,7 @@ script:
   - kubectl version
   - kubectl apply -f azure/helm-rbac.yaml
   - helm init --service-account tiller --node-selectors "beta.kubernetes.io/os"="linux"
+  - sleep 60
   - helm repo update
   - helm install stable/mongodb --name mongo
   - kubectl create namespace demo
