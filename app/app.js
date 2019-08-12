@@ -1,3 +1,6 @@
+const appInsights = require('applicationinsights')
+appInsights.setup('7656c9a7-d951-4878-a893-ef8505d9ad13')
+appInsights.start();
 const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
