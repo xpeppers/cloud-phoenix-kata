@@ -1,6 +1,6 @@
-const appInsights = require('applicationinsights')
-appInsights.setup('c8efef61-1255-4daf-b2a3-793697e55d45')
-appInsights.start();
+//const appInsights = require('applicationinsights')
+//appInsights.setup('c8efef61-1255-4daf-b2a3-793697e55d45')
+//appInsights.start();
 const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
