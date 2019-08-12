@@ -1,5 +1,5 @@
 const appInsights = require('applicationinsights')
-appInsights.setup('7656c9a7-d951-4878-a893-ef8505d9ad13')
+appInsights.setup('c8efef61-1255-4daf-b2a3-793697e55d45')
 appInsights.start();
 const createError = require('http-errors')
 const express = require('express')
