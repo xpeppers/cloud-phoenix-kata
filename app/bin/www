@@ -16,6 +16,13 @@ const port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)
 
 /**
+ * For interface appInsight.
+ */
+const appInsights = require('applicationinsights');
+const instrumentation_key = process.env.INSTRUMENTATION_KEY
+appInsights.setup(instrumentation_key).start();
+
+/**
  * Create HTTP server.
  */
 
