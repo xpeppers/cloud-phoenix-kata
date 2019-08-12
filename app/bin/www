@@ -4,6 +4,11 @@
  * Module dependencies.
  */
 
+const appInsights = require('applicationinsights')
+const instrumentation_key = process.env.INSTRUMENTATION_KEY
+appInsights.setup(instrumentation_key).start()
+
+
 const app = require('../app')
 const debug = require('debug')('phoenix-kata:server')
 const http = require('http')
@@ -15,14 +20,6 @@ const http = require('http')
 const port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)
 
-/**
- * For interface appInsight.
- */
-//const appInsights = require('applicationinsights')
-//const instrumentation_key = a124a6c4-aa65-4601-a3f7-e1878bd654ba
-//const instrumentation_key = process.env.INSTRUMENTATION_KEY
-//appInsights.setup(instrumentation_key).start();
-//appInsights.setup('7656c9a7-d951-4878-a893-ef8505d9ad13').start()
 
 /**
  * Create HTTP server.
