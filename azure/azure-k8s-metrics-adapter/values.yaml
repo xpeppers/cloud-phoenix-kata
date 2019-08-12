@@ -1,0 +1,102 @@
+# Default values for azure-k8s-metrics-adapter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: mcr.microsoft.com/k8s/metrics/adapter
+  tag: latest
+  pullPolicy: Always
+
+# Credentials used if the specified image is in a private registry
+imageCredentials:
+  name: registryCredentials
+  createSecret: false
+  # Default registry is DockerHub
+  registry: "https://index.docker.io/v1/"
+  username: ""
+  password: ""
+
+logLevel: 2
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+adapterSecurePort: 6443
+
+apiServiceInsecureSkipTLSVerify: true
+apiServiceGroupPriorityMinimum: 100
+apiServiceVersionPriority: 100
+
+service:
+  type: ClusterIP
+  port: 443
+
+# Azure Configuration
+
+azureAuthentication:
+  # method: {msi,clientSecret,clientCertificate,aadPodIdentity}
+  method: clientSecret
+  # Generate secret file. If false you are responsible for creating secret 
+  # To generate secret file swith to true then fill in values below
+  createSecret: false
+  # provide values here if you are using helm to create the secret
+  tenantID: ""
+  clientID: ""
+  clientSecret: ""
+  clientCertificate: ""
+  clientCertificatePath: ""
+  clientCertificatePassword: ""
+  # if you use aadPodIdentity authentication
+  azureIdentityName: "custom-metrics-identity"
+  azureIdentityBindingName: "custom-metrics-identity-binding"
+  # The full Azure resource id of the managed identity (/subscriptions/{SubID}/resourceGroups/{ResourceGroup1}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{IdentityName})
+  azureIdentityResourceId: ""
+  # The Client Id of the managed identity
+  azureIdentityClientId: ""
+
+
+# It is possible to pass app insights app id and key instead of using service principle
+# if no application insights key has been specified, then we will use AD authentication
+appInsights:
+  appId: ""
+  key: ""
+
+# Override the subscription if outside of Azure or for full control with `SUBSCRIPTION_ID`
+# See https://github.com/jsturtevant/azure-k8-metrics-adapter#subscription-information
+defaultSubscriptionId: ""
+
+extraEnv: {}
+extraArgs: {}
+
+# This is used by the static manifest generator in order to create a static
+# namespace manifest for the namespace that cert-manager is being installed
+# within. It should **not** be used if you are using Helm for deployment.
+createNamespaceResource: false
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
