@@ -79,7 +79,7 @@ You must set these variables to point to your Docker Hub in Travis before run CI
 
 `DOCKER_PASSWORD`
 
-If you don't want to rebuild the app these variables are not required and you have to comment the `script` step in `.travis.yml` file.
+If you don't want to rebuild the app these variables are not required and you have to comment the `before_script` step in `.travis.yml` file.
 
 These variables are required in Travis, take from the previous step:
 
@@ -132,7 +132,7 @@ with password obtained in CI or from:
 1. `GET /crash` and `GET /generatecert` are blocked by `ingress-controller`;
 2. Recover from crashes are implemented by kubernetes;
 4. The logs are saved in `azurerm_log_analytics_workspace` with a retention period of 30 days (>7);
-5. The database are in a separate pvc but unfortunally Azure volume plugin are not supported by Volume Snapshot Alpha for Kubernetes. So some strategies for backupping are possible but not achieved in the project. For example using Microsoft Recovery Service form tha Azure portal is possible to backup the vm on wich the cluster is running. Other method for backupping the db is to use simple mongodbdump (https://docs.mongodb.com/manual/tutorial/backup-and-restore-tools/) with a cronjob and a bash script. 
+5. The database are in a separate pvc but unfortunally Azure volume plugin are not supported by Volume Snapshot Alpha for Kubernetes. So some strategies for backupping are possible but not achieved in the project. For example using Microsoft Recovery Service form tha Azure portal is possible to backup the vm on wich the cluster is running. Other method for backupping the db is to use simple mongodbdump (https://docs.mongodb.com/manual/tutorial/backup-and-restore-tools/) with a cronjob and a bash script; 
 5. Notify any CPU peak -> possible using azure portal or using an alert on a Dashboard in Grafana (not implemented but I known how to do...). 
 7. Scale when the number of request are greater than 10 req /sec -> achieved using this metric adapter https://github.com/Azure/azure-k8s-metrics-adapter and a custom metric. The original app was modified to include Application Insights SDK https://docs.microsoft.com/en-us/azure/azure-monitor/app/nodejs. Other methods are possible, using prometheus metrics for instance, but not tested.
 
