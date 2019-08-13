@@ -12,12 +12,12 @@ install:
   - cp config ${HOME}/.kube/config
  
  
-script:
+before_script:
   - docker build -t ivandal77/demo .
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker push "$DOCKER_REPO"
 
-deploy:
+script:
   - kubectl version
   - kubectl apply -f azure/helm-rbac.yaml
   - helm init --service-account tiller --node-selectors "beta.kubernetes.io/os"="linux"
