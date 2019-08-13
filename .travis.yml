@@ -3,30 +3,38 @@ services:
 
 language: generic
 
-before_script:
+
+install:
   - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
   - curl -o config https://$GITHUB_ACCESS_TOKEN@raw.githubusercontent.com/iosdal/privaterepo/master/.kube/config
   - curl -L https://storage.googleapis.com/kubernetes-helm/helm-$(curl -s https://github.com/helm/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)-linux-amd64.tar.gz | tar -xz && chmod +x linux-amd64/helm && chmod +x linux-amd64/tiller && sudo mv linux-amd64/helm /usr/local/bin && sudo mv linux-amd64/tiller /usr/local/bin
   - mkdir ${HOME}/.kube
   - cp config ${HOME}/.kube/config
-  - docker build -t ivandal77/demo .
-
+ 
+ 
 script:
+  - docker build -t ivandal77/demo .
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker push ivandal77/demo
+  - docker push "$DOCKER_REPO"
+
+deploy:
   - kubectl version
   - kubectl apply -f azure/helm-rbac.yaml
   - helm init --service-account tiller --node-selectors "beta.kubernetes.io/os"="linux"
   - sleep 60
   - helm repo update
-  - helm install stable/mongodb --name mongo
+  - helm install stable/mongodb --name mongo --set persistence.enabled=true --set persistence.accessModes={ReadWriteOnce} --set persistence.size=8Gi
   - kubectl create namespace demo
   - helm install --name sample-release azure/azure-k8s-metrics-adapter --namespace demo --set appInsights.appId="$APP_ID" --set appInsights.key="$API_KEY" --set azureAuthentication.createSecret=true
   - kubectl create secret generic appinsightskey --from-literal=instrumentation-key="$INSTRUMENTATION_KEY" -n demo
   - kubectl apply -f azure/custom-metric.yaml
-  - kubectl apply -f azure/depoyment.yaml
+  - kubectl apply -f azure/deployment.yaml
   - kubectl apply -f azure/service.yaml
   - kubectl apply -f azure/hpa.yaml
   - helm install stable/nginx-ingress --namespace demo --set controller.replicaCount=2 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
   - kubectl apply -f azure/inbound.yaml
+  - helm install --name=prometheus stable/prometheus --namespace monitoring --set rbac.create=true
+  - helm install --name=grafana stable/grafana --set persistence.enabled=true --set persistence.accessModes={ReadWriteOnce} --set persistence.size=8Gi --namespace monitoring
   - kubectl get service -l app=nginx-ingress --namespace demo
+  - kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+  
